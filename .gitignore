@@ -1,41 +1,72 @@
-# Compiled Lua sources
-luac.out
+-- Tenta carregar o script remoto do GitHub de forma segura
+local sucesso, scriptRetorno = pcall(function()
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/<adriano-rc>/<DeadlyDelivery_bring_button>/main/trazer_button.lua"))()
+end)
 
-# luarocks build files
-*.src.rock
-*.zip
-*.tar.gz
+if not sucesso then
+    warn("Erro ao carregar DeadlyDelivery_bring_button:", scriptRetorno)
+end
 
-# Object files
-*.o
-*.os
-*.ko
-*.obj
-*.elf
+-- Cria a interface básica
+local gui = Instance.new("ScreenGui")
+local frame = Instance.new("Frame")
 
-# Precompiled Headers
-*.gch
-*.pch
+gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-*.def
-*.exp
+frame.Size = UDim2.new(0, 300, 0, 360)
+frame.Position = UDim2.new(0.5, -150, 0.5, -180)
+frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+frame.BorderSizePixel = 0
+frame.Parent = gui
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+-- Função auxiliar para criar botões
+local function MakeButton(name, positionY)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 250, 0, 50)
+    btn.Position = UDim2.new(0.5, -125, 0, positionY)
+    btn.Text = name
+    btn.TextColor3 = Color3.new(1, 1, 1)
+    btn.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+    btn.Parent = frame
+    return btn
+end
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+-- BOTÃO: TRAZER ITENS
+local btnTrazer = MakeButton("TRAZER", 10)
+btnTrazer.MouseButton1Click:Connect(function()
+    if type(BringItems) == "function" then
+        BringItems()
+    else
+        warn("BringItems() não encontrada")
+    end
+end)
 
+-- BOTÃO: COLETAR AUTOMÁTICO
+local btnAutoCollect = MakeButton("COLETAR AUTOMÁTICO", 70)
+btnAutoCollect.MouseButton1Click:Connect(function()
+    if type(AutoCollect) == "function" then
+        AutoCollect()
+    else
+        warn("AutoCollect() não encontrada")
+    end
+end)
+
+-- BOTÃO: TELEPORTE
+local btnTeleport = MakeButton("TELEPORTE", 130)
+btnTeleport.MouseButton1Click:Connect(function()
+    if type(TeleportPlayer) == "function" then
+        TeleportPlayer()
+    else
+        warn("TeleportPlayer() não encontrada")
+    end
+end)
+
+-- BOTÃO: EQUIPAR ITENS
+local btnEquipItems = MakeButton("EQUIPAR ITENS", 190)
+btnEquipItems.MouseButton1Click:Connect(function()
+    if type(EquipItems) == "function" then
+        EquipItems()
+    else
+        warn("EquipItems() não encontrada")
+    end
+end)
